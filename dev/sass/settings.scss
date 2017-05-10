@@ -1,0 +1,22 @@
+$dark-gray: #84878a;
+$gray: #e5e8eb;
+$light-gray: #f7f6f3;
+$red: #cf3004;
+$white: #fff;
+
+$primary-color: #52cae4;
+$secondary-color: $dark-gray;
+$success-color: #84bb2e;
+$alert-color: #d83314;
+$warning-color: #e2af19;
+
+$sidebar-z-index: 1000;
+$sidebar-width: 500px;
+
+$sidebar-header-height: 60px;
+$sidebar-content-width: $sidebar-width - 50px;
+$sidebar-content-padding: 16px 32px;
+$sidebar-highlight-border-color: $red;
+$sidebar-highlight-border-width: 2px;
+$sidebar-tab-button-right-padding: 8px;
+$sidebar-toast-opacity: 0.8;

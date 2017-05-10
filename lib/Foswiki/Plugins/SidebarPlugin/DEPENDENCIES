@@ -1,0 +1,4 @@
+Foswiki::Contrib::FontAwesomeContrib,>0,perl,Required.
+Foswiki::Plugins::FlatSkinPlugin,>=1.0,perl,Required.
+Foswiki::Plugins::JQueryPlugin,>=1.0,perl,Required.
+Foswiki::Plugins::VueJSPlugin,>0,perl,Required.
