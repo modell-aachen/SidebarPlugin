@@ -1,2 +1,4 @@
 node_modules/
 npm-debug.log
+pub/System/SidebarPlugin/sidebar.js
+pub/System/SidebarPlugin/sidebar.js.map
