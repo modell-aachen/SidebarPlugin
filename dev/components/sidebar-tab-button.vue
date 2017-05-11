@@ -1,5 +1,5 @@
 <template>
-<button class="sidebar-tab-button" :class="type" @click="click">
+<button class="sidebar-tab-button" :class="type" :title="tooltip" @click="click">
   <i class="fa fa-2x" :class="icon"></i>
 </button>
 </template>
@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'sidebar-tab-button',
-  props: ['icon', 'type'],
+  props: ['icon', 'tooltip', 'type'],
   methods: {
     click: function() {
       this.$emit('click');
