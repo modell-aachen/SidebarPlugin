@@ -5,7 +5,7 @@
     <sidebar-tab-button icon="fa-times" type="close" @click="hide" />
     <div class="controls">
       <template v-for="tab in tabs">
-        <sidebar-tab-button :icon="tab.icon" :title="tab.tooltip" @click="tab.callback" />
+        <sidebar-tab-button ref="sidebar-tab-buttons" :icon="tab.icon" :title="tab.tooltip" @click="tab.callback" />
       </template>
     </div>
   </div>
@@ -63,6 +63,19 @@ var hideSidebar = function() {
   }
 }
 
+// TBD.
+// Maybe it makes more sense to implement a kind of tab.isDefault and switch
+// back to that tab instead of assuming the first tab to be the default one.
+var resetActiveTab = function() {
+  if (Array.isArray(this.$refs['sidebar-tab-buttons'])) {
+    var tabs = this.$refs['sidebar-tab-buttons'];
+    if (tabs.length) {
+      tabs.forEach((tab) => tab.unset());
+      tabs[0].set();
+    }
+  }
+};
+
 var showSidebar = function(config) {
   if (!this.isInitalized) {
     if (window.console && console.debug) {
@@ -78,7 +91,9 @@ var showSidebar = function(config) {
 
   this.isHighlighted = !!config.highlight;
   this.content = content;
+
   this.isActive = true;
+  resetActiveTab.call(this);
 };
 
 var showContent = function(config) {
@@ -95,7 +110,9 @@ var showContent = function(config) {
   initializeMarginals.call(this, o);
   this.content = content;
   this.isHighlighted = !!o.highlight;
+
   this.isActive = true;
+  resetActiveTab.call(this);
 };
 
 var extractContent = function(config) {
@@ -262,6 +279,10 @@ export default {
 
   &.active {
     transform: translate3d(0, 0, 0);
+  }
+
+  *:focus {
+    outline:none;
   }
 }
 
