@@ -3,8 +3,10 @@
 
   <div class="tab-controls" :class="{highlight: isHighlighted}">
     <sidebar-tab-button icon="fa-times" type="close" @click="hide" />
-    <div class="controls" v-for="btn in tabButtons">
-      <sidebar-tab-button :icon="btn.icon" @click="btn.callback" />
+    <div class="controls">
+      <template v-for="tab in tabs">
+        <sidebar-tab-button :icon="tab.icon" :title="tab.tooltip" @click="tab.callback" />
+      </template>
     </div>
   </div>
 
@@ -31,7 +33,19 @@ var initialize = function(config) {
     throw 'Invalid configuration object!';
   }
 
-  // ToDo.
+  var tabs = [];
+  if (config.tabs && Array.isArray(config.tabs)) {
+    config.tabs.forEach(function(tab) {
+      if (!tab.icon) {
+        throw "Invalid tab configuration. Parameter 'icon' is mandatory!";
+      }
+
+      tabs.push({icon: tab.icon, tooltip: tab.tooltip, callback: tab.callback});
+    });
+  }
+
+  initializeMarginals.call(this, config);
+  this.tabs = tabs;
   this.isInitalized = true;
 };
 
@@ -46,7 +60,7 @@ var hideSidebar = function() {
   }
 }
 
-var showSidebar = function(highlight) {
+var showSidebar = function(config) {
   if (!this.isInitalized) {
     if (window.console && console.debug) {
       console.debug("You have to call 'sidebar.initialize' first!");
@@ -54,7 +68,13 @@ var showSidebar = function(highlight) {
     }
   }
 
-  this.isHighlighted = !!highlight;
+  var content = extractContent.call(this, config);
+  if (content === false) {
+    throw "Invalid content element. Needs to be one of: jQuery element, DOM element or plain (HTML) string";
+  }
+
+  this.isHighlighted = !!config.highlight;
+  this.content = content;
   this.isActive = true;
 };
 
@@ -64,41 +84,51 @@ var showContent = function(config) {
     throw 'Missing content attribute!';
   }
 
-  var content;
-  if (o.content.jquery == jQuery.fn.jquery) {
-    content = o.content.toArray().map(function(item) {
-      return item.outerHTML;
-    }).join("\n");
-  } else if (o.content instanceof HTMLElement) {
-    content = o.content.outerHTML;
-  } else if (typeof o.content === 'function') {
-    content = o.content.call(this, o);
-  } else if (typeof o.content === 'string') {
-    content = o.content;
-  } else {
+  var content = extractContent.call(this, o);
+  if (content === false) {
     throw "Invalid content element. Needs to be one of: jQuery element, DOM element or plain (HTML) string";
   }
 
+  initializeMarginals.call(this, o);
+  this.content = content;
+  this.isHighlighted = !!o.highlight;
+  this.isActive = true;
+};
+
+var extractContent = function(config) {
+  if (config.content.jquery == jQuery.fn.jquery) {
+    return config.content.toArray().map(function(item) {
+      return item.outerHTML;
+    }).join("\n");
+  } else if (config.content instanceof HTMLElement) {
+    return config.content.outerHTML;
+  } else if (typeof config.content === 'function') {
+    return config.content.call(this, config);
+  } else if (typeof config.content === 'string') {
+    return config.content;
+  }
+
+  return false;
+};
+
+var initializeMarginals = function(config) {
+  var self = this;
   var tmp = {header: {}, footer: {}}
   Object.keys(tmp).forEach(key => {
-    if (o[key]) {
-      if (o[key].left && Array.isArray(o[key].left) && o[key].left.length) {
-        tmp[key].left = o[key].left;
+    if (config[key]) {
+      if (config[key].left && Array.isArray(config[key].left) && config[key].left.length) {
+        tmp[key].left = config[key].left;
       }
 
-      if (o[key].right && Array.isArray(o[key].right) && o[key].right.length) {
-        tmp[key].right = o[key].right;
+      if (config[key].right && Array.isArray(config[key].right) && config[key].right.length) {
+        tmp[key].right = config[key].right;
       }
     }
 
     if (Object.keys(tmp[key]).length) {
-      this[key] = tmp[key];
+      self[key] = tmp[key];
     }
   });
-
-  this.content = content;
-  this.isHighlighted = !!o.highlight;
-  this.isActive = true;
 };
 
 var isOpened = function() {
@@ -132,24 +162,14 @@ export default {
     hide: hideSidebar,
     makeToast: makeToast,
     isOpened: isOpened,
-    initialize: initialize,
-    // foo: function(icon, cb) {
-    //   if (!icon) {
-    //     if (window.console && console.log) {
-    //       console.log('Parameter icon is mandatory!');
-    //       return;
-    //     }
-    //   }
-
-    //   this.tabButtons.push({icon: icon, callback: function() {console.log('foobar');} });
-    // }
+    initialize: initialize
   },
   data: function() {
     return {
       isActive: false,
       isHighlighted: false,
       isInitalized: false,
-      tabButtons: [],
+      tabs: [],
       content: undefined,
       toast: undefined,
       header: undefined,
