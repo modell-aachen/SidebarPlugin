@@ -138,6 +138,17 @@ export default {
       margin-top: 0;
       margin-bottom: 1rem;
     }
+
+    * {
+      white-space: -moz-pre-wrap !important;
+      white-space: -pre-wrap;
+      white-space: -o-pre-wrap;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      white-space: -webkit-pre-wrap;
+      word-break: break-all;
+      white-space: normal;
+    }
   }
 
   .modal-buttons {

@@ -290,6 +290,14 @@ export default {
 
   > .content {
     padding: $sidebar-content-padding;
+    white-space: -moz-pre-wrap !important;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    white-space: -webkit-pre-wrap;
+    word-break: break-all;
+    white-space: normal;
   }
 }
 </style>
