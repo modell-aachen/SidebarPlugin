@@ -7,9 +7,30 @@
 <script>
 export default {
   name: 'sidebar-toast',
-  props: ['icon', 'text', 'color'],
+  props: ['color', 'icon', 'position', 'size', 'text',],
   computed: {
     dimension: function() {
+      var self = this;
+      var dim = {};
+
+      if (this.size) {
+        ['height', 'width'].forEach((prop) => {
+          if (self.size[prop]) {
+            dim[prop] = self.size[prop];
+          }
+        });
+      }
+
+      if (this.position) {
+        ['top', 'right', 'bottom', 'left'].forEach((prop) => {
+          if (self.position[prop]) {
+            dim[prop] = self.position[prop];
+          }
+        });
+      }
+
+      console.log(dim);
+      return dim;
     },
     toastColor: function() {
       var o = {

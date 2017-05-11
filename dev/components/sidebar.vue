@@ -20,7 +20,9 @@
     <sidebar-toast v-if="toast"
       :icon="toast.icon"
       :text="toast.text"
-      :color="toast.color">
+      :color="toast.color"
+      :size="toast.size"
+      :position="toast.position">
     </sidebar-toast>
   </transition>
 </div>
@@ -143,7 +145,9 @@ var makeToast = function(opts) {
   this.toast = {
     icon: opts.icon || '',
     text: opts.text,
-    color: opts.color
+    color: opts.color,
+    size: opts.size,
+    position: opts.position
   };
 
   if (typeof opts.closetime !== 'number' || opts.closetime <= 0) {
