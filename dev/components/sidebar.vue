@@ -147,7 +147,7 @@ var makeToast = function(opts) {
   };
 
   if (typeof opts.closetime !== 'number' || opts.closetime <= 0) {
-    opts.closetime = 3500;
+    opts.closetime = 5000;
   }
 
   var self = this;
