@@ -1,44 +1,43 @@
 <template>
 <div class="sidebar-toast" :class="toastColor" :style="dimension">
-  <p><i class="fa" :class="icon"></i>&nbsp;{{text}}</p>
+  <p><i class="fa" :class="config.icon"></i>&nbsp;{{config.text}}</p>
 </div>
 </template>
 
 <script>
 export default {
   name: 'sidebar-toast',
-  props: ['color', 'icon', 'position', 'size', 'text',],
+  props: ['config',],
   computed: {
     dimension: function() {
       var self = this;
       var dim = {};
 
-      if (this.size) {
+      if (this.config.size) {
         ['height', 'width'].forEach((prop) => {
-          if (self.size[prop]) {
-            dim[prop] = self.size[prop];
+          if (self.config.size[prop]) {
+            dim[prop] = self.config.size[prop];
           }
         });
       }
 
-      if (this.position) {
+      if (this.config.position) {
         ['top', 'right', 'bottom', 'left'].forEach((prop) => {
-          if (self.position[prop]) {
-            dim[prop] = self.position[prop];
+          if (self.config.position[prop]) {
+            dim[prop] = self.config.position[prop];
           }
         });
       }
 
-      console.log(dim);
       return dim;
     },
     toastColor: function() {
       var o = {
-        primary: this.color === 'primary',
-        secondary: this.color === 'secondary',
-        success: this.color === 'success',
-        alert: this.color === 'alert',
-        warning: this.color === 'warning'
+        primary: this.config.color === 'primary',
+        secondary: this.config.color === 'secondary',
+        success: this.config.color === 'success',
+        alert: this.config.color === 'alert',
+        warning: this.config.color === 'warning'
       };
 
       // default to 'secondary' style
