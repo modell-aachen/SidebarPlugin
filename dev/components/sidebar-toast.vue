@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'sidebar-toast',
-  props: ['config',],
+  props: ['config'],
   computed: {
     dimension: function() {
       var self = this;
