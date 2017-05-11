@@ -18,12 +18,15 @@
 
   <transition name="fade">
     <sidebar-toast v-if="toast"
-      :icon="toast.icon"
-      :text="toast.text"
-      :color="toast.color"
-      :size="toast.size"
-      :position="toast.position">
+      :config="toast" />
     </sidebar-toast>
+  </transition>
+
+  <transition name="fade">
+    <sidebar-modal v-if="modal"
+      :config="modal"
+      @modal-canceled="hideModal"
+      @modal-confirmed="hideModal" />
   </transition>
 </div>
 </template>
@@ -158,12 +161,51 @@ var makeToast = function(opts) {
   setTimeout(() => (self.toast = undefined), opts.closetime);
 };
 
+var makeModal = function(opts) {
+  if (!this.isActive) return;
+  opts = Object.assign({}, opts);
+
+  var content;
+  if (opts.content) {
+    content = extractContent.call(this, opts);
+    if (content === false) {
+      throw "Invalid content element. Needs to be one of: jQuery element, DOM element or plain (HTML) string";
+    }
+  }
+
+  var modal = {
+    color: opts.color,
+    content: content,
+    icon: opts.icon,
+    title: opts.title,
+    type: opts.type,
+    buttons: opts.buttons
+  };
+
+  this.modal = modal;
+
+  if (opts.autoclose === true) {
+    if (typeof opts.closetime !== 'number' || opts.closetime <= 0) {
+      opts.closetime = 5000;
+    }
+
+    var self = this;
+    setTimeout(() => (self.modal = undefined), opts.closetime);
+  }
+};
+
+var hideModal = function() {
+  this.modal = undefined;
+};
+
 export default {
   name: 'qwiki-sidebar',
   methods: {
     show: showSidebar,
     showContent: showContent,
     hide: hideSidebar,
+    hideModal: hideModal,
+    makeModal: makeModal,
     makeToast: makeToast,
     isOpened: isOpened,
     initialize: initialize
@@ -175,6 +217,7 @@ export default {
       isInitalized: false,
       tabs: [],
       content: undefined,
+      modal: undefined,
       toast: undefined,
       header: undefined,
       footer: undefined
@@ -188,6 +231,8 @@ export default {
       hide: this.hide,
       initialize: this.initialize,
       isOpened: this.isOpened,
+      hideModal: this.hideModal,
+      makeModal: this.makeModal,
       makeToast: this.makeToast
     });
   }

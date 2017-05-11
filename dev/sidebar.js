@@ -3,6 +3,7 @@ import sidebar_button from './components/sidebar-button.vue';
 import sidebar_dropdown from './components/sidebar-dropdown.vue';
 import sidebar_label from './components/sidebar-label.vue';
 import sidebar_marginal from './components/sidebar-marginal.vue';
+import sidebar_modal from './components/sidebar-modal.vue';
 import sidebar_tab_button from './components/sidebar-tab-button.vue';
 import sidebar_toast from './components/sidebar-toast.vue';
 
@@ -13,6 +14,7 @@ import sidebar_toast from './components/sidebar-toast.vue';
     Vue.component(sidebar_dropdown.name, sidebar_dropdown);
     Vue.component(sidebar_label.name, sidebar_label);
     Vue.component(sidebar_marginal.name, sidebar_marginal);
+    Vue.component(sidebar_modal.name, sidebar_modal);
     Vue.component(sidebar_tab_button.name, sidebar_tab_button);
     Vue.component(sidebar_toast.name, sidebar_toast);
 
