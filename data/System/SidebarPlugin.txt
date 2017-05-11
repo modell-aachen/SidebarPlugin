@@ -6,23 +6,648 @@
 %TOC%
 
 ---++ Introduction
-
-%JQREQUIRE{"chili"}%
 This plugin provides a API to display any kind of content within a sidebar.
+%JQREQUIRE{"chili"}%
+%ADDTOZONE{"script" text="<script type='text/javascript' src='%PUBURLPATH%/%SYSTEMWEB%/SidebarPlugin/example.js'></script>" requires="JQUERYPLUGIN::FOSWIKI::PREFERENCES" id="SIDEBARPLUGIN::EXAMPLES"}%
 
 ---++ Installation
 %$INSTALL_INSTRUCTIONS%
 
----++ API Usage
+---++ API
+---+++ The =window.sidebar= object
+!SidebarPlugin extends a browser's window object by an object called =sidebar=
+which exposes some shorthands to manipulate the sidebar itself.
+
+| *Property* | *Description* |
+| $vm | The vuejs instance hosting the sidebar |
+| showContent | Shows the sidebar *without* prior initialization; tabs *are not available* when calling method =showContent= |
+| initialize | Initialized the sidebar; *required if you want to use its tabbed features* |
+| show | Shows the sidebar; *requires a call to =initialize= first* |
+| hide | Hides the sidebar |
+| isOpened | Checks whether the sidebar is visible to the user |
+| makeModal | Creates and shows a modal dialog |
+| hideModal | Hides the modal dialog |
+| makeToast | Creates and shows a toast notification |
+
+---+++ *Components*
+The sidebar is constructed by passing a plain javascript object into its public
+methods. Most of that methods take one or more component definitions, like
+buttons, dropdowns and labels.%BR%
+In this section those component definitions are explained.
+---++++ *Buttons*
+| *Property* | *Description* |
+| callback | Function; called when the button gets clicked |
+| color | Class name analogous to Foundation Sites; one of =primary=, =secondary=, =success=, =warning=, =alert= |
+| icon | Class name of a [[FontAwesomeContrib][FontAwesome]] icon; e.g. =fa-check= |
+| text | The text of the button |
+| tooltip | A tooltip message |
+
+<verbatim class="js">
+{
+  type: 'button',
+  callback: function() { alert('clicked'); },
+  color: 'success',
+  icon: 'fa-check',
+  text: 'Click',
+  tooltip: 'Shown when hovered'
+}
+</verbatim>
+
+---++++ *Dropdowns*
+!ToDo
+
+<verbatim class="js">
+{
+  type: 'dropdown',
+  color: 'success',
+  icon: 'fa-check',
+  text: 'Click',
+  tooltip: 'Shown when hovered'
+}
+</verbatim>
+
+---++++ *Labels*
+| *Property* | *Description* |
+| color | Class name analogous to Foundation Sites; one of =primary=, =secondary=, =success=, =warning=, =alert= |
+| text | The text of the label |
+
+<verbatim class="js">
+{
+  type: 'label',
+  color: 'success',
+  text: 'Approved',
+}
+</verbatim>
+
+%BR%
+---+++ *Methods*
+---++++ *sidebar.showContent*
+Shows the sidebar withoud prior initialization. By using =sidebar.showContent=
+you are not able to use the sidebar's tab feature, but still able to configure
+the header and footer areas.
+<verbatim class="js">
+window.sidebar.showContent(options);
+</verbatim>
+
+Where =options= is a object with the following parameters:%BR%
+| *Property* | *Description* |
+| content | Plain text, HTML string, HTMLElement, jQuery selection or a function returning a HTML string |
+| highlight | Boolean, optional. Indicating whether the sidebar shall highlight its outer left border |
+| header | Object, optional. See below. |
+| footer | Object, optional. See below. |
+
+The header and footer areas are divided into a =left= and =right= section;
+property names =left= and =right=. Both are defined by an array containing one
+ore more component definitions (see above; buttons, dropdowns and labels).
+
+<verbatim class="js">
+var options = {
+  ...
+  header: {
+    left: [...],
+    right: [...]
+  },
+  footer: {
+    left: [...],
+    right: [...]
+  }
+  ...
+};
+</verbatim>
+<verbatim class="js">
+var options = {
+  ...
+  header: {
+    left: [{
+      type: 'label',
+      color: 'secondary',
+      text: 'approved'
+    }],
+    right: [{
+      type: 'button'
+      color: 'primary',
+      text: 'discuss',
+      callback: () => {...}
+    }, {
+      type: 'dropdown',
+      color: 'primary',
+      text: 'more',
+      ...
+    }]
+  }
+  ...
+};
+</verbatim>
+
+<verbatim class="js">
+var options = {
+  highlight: true,
+  content: '<strong>Hello World!</strong>',
+  header: {
+    left: {
+      type: 'label',
+      text: 'some label',
+      color: 'primary'
+    }
+  }
+};
+window.sidebar.showContent(options);
+</verbatim>
+
+---++++ *sidebar.initialize*
+Initializes the sidebar with a given =header=, =footer= and =tab= configuration.
+You have to make a call to =sidebar.initialize= if you'd like to use it's tabs.
+
+The configuration object taken by =initialize= is constructed as follow:
+| *Property* | *Description* |
+| header | Object, optional. Same as for =showContent= |
+| footer | Object, optional. Same as for =showContent= |
+| tabs | Array, optional. Containing one ore more tab definitions. |
+
+Where a tab definition is an object, defined by the following properties:
+| *Property* | *Description* |
+| callback | Function. Called when the tab gets clicked |
+| icon | Class name of a [[FontAwesomeContrib][FontAwesome]] icon; e.g. =fa-clock-o= |
+| tooltip | A tooltip message |
+
+<verbatim class="js">
+var options = {
+  highlight: true,
+  content: '<strong>Hello World!</strong>',
+  header: {
+    left: {
+      type: 'label',
+      text: 'some label',
+      color: 'primary'
+    }
+  },
+  tabs: [{
+    icon: 'fa-user',
+    tooltip: 'Hello World!',
+    callback: () => alert('clicked')
+  }]
+};
+window.sidebar.initialize(options);
+</verbatim>
+
+*Note*: =sidebar.initialize= ignores any content passed to it. In order to open
+the sidebar and show some content, you have to call =sidebar.show=.
+
+---++++ *sidebar.show*
+Shows a previously configured/initialized sidebar.%BR%
+Takes an object as argument, defining the content to show and if the sidebar
+shall highlight its outer left border.
+
+| *Property* | *Description* |
+| highlight | Boolean, optional. Defines whether the outer left border shall be highlighted |
+| content | Plain text, HTML string, HTMLElement, jQuery selection or a function returning a HTML string |
+
+<verbatim class="js">
+var options = {
+  highlight: false,
+  content: $('#my-content')
+};
+sidebar.show(options);
+</verbatim>
+
+---++++ *sidebar.hide*
+Hides the entire sidebar.
+<verbatim class="js">
+sidebar.hide();
+</verbatim>
+
+---++++ *sidebar.isOpened*
+A method to check whether the sidebar is open. Returns =true= if its open, else
+=false=.
+<verbatim class="js">
+if (!sidebar.isOpened()) {
+  sidebar.open({content: $('#my-content')});
+}
+</verbatim>
+
+---++++ *sidebar.makeModal*
+Creates a modal dialog.
+
+| *Property* | *Description* |
+| autoclose | Boolean, optional. Defines whether the modal shall be closed automatically |
+| closetime | Number, defaults to 5000. Amount of time in ms after which the modal disappears. |
+| color | Class name analogous to Foundation Sites; one of =primary=, =secondary=, =success=, =warning=, =alert= |
+| content | Plain text, HTML string, HTMLElement, jQuery selection or a function returning a HTML string |
+| icon | Class name of a [[FontAwesomeContrib][FontAwesome]] icon; e.g. =fa-check= |
+| title | Title text. |
+| type | Shorthand configuration; one of =spinner=, =success=, =warning=, =alert= |
+| buttons | Object, optional. See below. |
+
+ Modals can be configured to display buttons to accept an action or to declione it.
+ Those buttons are configured by keys =confirm= and =cancel=. Each of them takes
+ a =callback= function and some =text= to display.
+
+<verbatim class="js">
+sidebar.makeModal({
+  title: 'Some title text',
+  content: 'Lorem ipsum dolor sit amet.',
+  buttons: {
+    confirm: {
+      text: 'Accept',
+      callback: () => console.log('accepted')
+    },
+    cancel: {
+      text: 'Cancel',
+      callback: () => console.log('canceled');
+    }
+  }
+});
+</verbatim>
+
+<verbatim class="js">
+sidebar.makeModal({
+  type: 'spinner',
+  autoclose: true,
+  closetime: 10000
+});
+</verbatim>
+
+---++++ *sidebar.hideModal*
+Hides/Closes a previously shown modal dialog.
+<verbatim class="js">
+sidebar.hideModal();
+</verbatim>
+
+---++++ *sidebar.makeToast*
+Creates a configurable toast notification.
+
+| *Property* | *Description* |
+| closetime | Number, defaults to 5000. Amount of time in ms after which the toast disappears. |
+| color | Class name analogous to Foundation Sites; one of =primary=, =secondary=, =success=, =warning=, =alert= |
+| icon | Class name of a [[FontAwesomeContrib][FontAwesome]] icon; e.g. =fa-check= |
+| text | The text to show. |
+| position | Object, optional. See below. |
+| size | Object, optional. See below. |
+
+By default a toast is displayed at the top of the sidebar. However, you may
+manipulate its =size= and =position= by specifying the attributes =width= and
+=height= (size) or the =top=, =bottom=, =left=, =right= alignment (position).
+
+
+<verbatim class="js">
+var options = {
+  color: 'warning',
+  text: 'Hello World!'
+};
+sidebar.makeToast(options);
+</verbatim>
+
+<verbatim class="js">
+var options = {
+  color: 'warning',
+  text: 'Hello World!',
+  size: {
+    height: '400px'
+  },
+  position: {
+    top: '400px'
+  }
+};
+sidebar.makeToast(options);
+</verbatim>
+
+---++ Content Building Blocks
 !ToDo
 
 ---++ Examples
-!ToDo
+---+++ Showing the sidebar
+Showing content without initialization: %BUTTON{"Run example" id="btn-ex-1"}%
+%BR%
+%TWISTY{showlink="Show source" hidelink="Hide source"}%
+<div id="div-ex-1">
+<verbatim class="js">
+var o = {
+  content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
+  header: {
+    left: [
+      {
+        type: 'label',
+        color: 'primary',
+        text: 'label 1'
+      },
+      {
+        type: 'label',
+        color: 'warning',
+        text: 'label 2'
+      }
+    ],
+    right: [
+      {
+        type: 'dropdown',
+        color: 'primary',
+        text: 'more'
+      }
+    ],
+  },
+  footer: {
+    right: [
+      {
+        type: 'button',
+        color: 'alert',
+        text: 'Close sidebar',
+        callback: function() {sidebar.hide();}
+      }
+    ]
+  }
+};
+
+sidebar.showContent(o);
+</verbatim>
+</div>
+%ENDTWISTY%
+
+---+++ Toast notifications
+Toast at top position: %BUTTON{"Run example" id="btn-ex-2"}%
+%BR%
+%TWISTY{showlink="Show source" hidelink="Hide source"}%
+<div id="div-ex-2">
+<verbatim class="js">
+var o = {
+  content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
+  header: {
+    left: [
+      {
+        type: 'label',
+        color: 'primary',
+        text: 'label 1'
+      },
+      {
+        type: 'label',
+        color: 'warning',
+        text: 'label 2'
+      }
+    ],
+    right: [
+      {
+        type: 'dropdown',
+        color: 'primary',
+        text: 'more'
+      }
+    ],
+  },
+  footer: {
+    right: [
+      {
+        type: 'button',
+        color: 'alert',
+        text: 'Close sidebar',
+        callback: function() {sidebar.hide();}
+      }
+    ]
+  }
+};
+
+sidebar.showContent(o);
+setTimeout(function() {
+  sidebar.makeToast({
+    color: 'warning',
+    icon: 'fa-exclamation-triangle',
+    text: 'Brace yourself!',
+    closetime: 3000
+  });
+}, 750);
+</verbatim>
+</div>
+%ENDTWISTY%
+
+Toast with other dimensions: %BUTTON{"Run example" id="btn-ex-4"}%
+%BR%
+%TWISTY{showlink="Show source" hidelink="Hide source"}%
+<div id="div-ex-4">
+<verbatim class="js">
+var o = {
+  content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
+  header: {
+    left: [
+      {
+        type: 'label',
+        color: 'primary',
+        text: 'label 1'
+      },
+      {
+        type: 'label',
+        color: 'warning',
+        text: 'label 2'
+      }
+    ],
+    right: [
+      {
+        type: 'dropdown',
+        color: 'primary',
+        text: 'more'
+      }
+    ],
+  },
+  footer: {
+    right: [
+      {
+        type: 'button',
+        color: 'alert',
+        text: 'Close sidebar',
+        callback: function() {sidebar.hide();}
+      }
+    ]
+  }
+};
+
+sidebar.showContent(o);
+setTimeout(function() {
+  sidebar.makeToast({
+    color: 'success',
+    icon: 'fa-check',
+    text: 'Tada!! Success!',
+    closetime: 3000,
+    size: {
+      width: '300px',
+      height: '50px'
+    },
+    position: {
+      top: '50%',
+      left: '75px'
+    }
+  });
+}, 750);
+</verbatim>
+</div>
+%ENDTWISTY%
+
+---+++ Modals
+Showing a spinner: %BUTTON{"Run example" id="btn-ex-3"}%
+%BR%
+%TWISTY{showlink="Show source" hidelink="Hide source"}%
+<div id="div-ex-3">
+<verbatim class="js">
+var o = {
+  content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
+  header: {
+    left: [
+      {
+        type: 'label',
+        color: 'primary',
+        text: 'label 1'
+      },
+      {
+        type: 'label',
+        color: 'warning',
+        text: 'label 2'
+      }
+    ],
+    right: [
+      {
+        type: 'dropdown',
+        color: 'primary',
+        text: 'more'
+      }
+    ],
+  },
+  footer: {
+    right: [
+      {
+        type: 'button',
+        color: 'alert',
+        text: 'Close sidebar',
+        callback: function() {sidebar.hide();}
+      }
+    ]
+  }
+};
+
+sidebar.showContent(o);
+setTimeout(function() {
+  sidebar.makeModal({
+    type: 'spinner',
+    closetime: 3000,
+    autoclose: true
+  });
+}, 750);
+</verbatim>
+</div>
+%ENDTWISTY%
+
+Showing a message (of type success): %BUTTON{"Run example" id="btn-ex-6"}%
+%BR%
+%TWISTY{showlink="Show source" hidelink="Hide source"}%
+<div id="div-ex-6">
+<verbatim class="js">
+var o = {
+  content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
+  header: {
+    left: [
+      {
+        type: 'label',
+        color: 'primary',
+        text: 'label 1'
+      },
+      {
+        type: 'label',
+        color: 'warning',
+        text: 'label 2'
+      }
+    ],
+    right: [
+      {
+        type: 'dropdown',
+        color: 'primary',
+        text: 'more'
+      }
+    ],
+  },
+  footer: {
+    right: [
+      {
+        type: 'button',
+        color: 'alert',
+        text: 'Close sidebar',
+        callback: function() {sidebar.hide();}
+      }
+    ]
+  }
+};
+
+sidebar.showContent(o);
+setTimeout(function() {
+  sidebar.makeModal({
+    title: 'Perfect!',
+    content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
+    autoclose: true,
+    closetime: 3000,
+    type: 'success'
+  });
+}, 750);
+</verbatim>
+</div>
+%ENDTWISTY%
+
+Showing a dialog: %BUTTON{"Run example" id="btn-ex-5"}%
+%BR%
+%TWISTY{showlink="Show source" hidelink="Hide source"}%
+<div id="div-ex-5">
+<verbatim class="js">
+var o = {
+  content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
+  header: {
+    left: [
+      {
+        type: 'label',
+        color: 'primary',
+        text: 'label 1'
+      },
+      {
+        type: 'label',
+        color: 'warning',
+        text: 'label 2'
+      }
+    ],
+    right: [
+      {
+        type: 'dropdown',
+        color: 'primary',
+        text: 'more'
+      }
+    ],
+  },
+  footer: {
+    right: [
+      {
+        type: 'button',
+        color: 'alert',
+        text: 'Close sidebar',
+        callback: function() {sidebar.hide();}
+      }
+    ]
+  }
+};
+
+sidebar.showContent(o);
+setTimeout(function() {
+  sidebar.makeModal({
+    title: 'Very important question!',
+    content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
+    buttons: {
+      cancel: {
+        text: 'Nope',
+        callback: function() { sidebar.hideModal(); }
+      },
+      confirm: {
+        text: 'Yeah!',
+        callback: function() { sidebar.hideModal(); }
+      }
+    }
+  });
+}, 750);
+</verbatim>
+</div>
+%ENDTWISTY%
 
 ---++ Plugin Info
 
 | Author: | Foswiki:Main.SvenMeyer |
-| Copyright: | &copy; 2017, Modell Aachen GmbH |
+| Copyright: | &copy; 2017, Modell Aachen !GmbH |
 | License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 | Release: | %$RELEASE% |
 | Version: | %$VERSION% |
