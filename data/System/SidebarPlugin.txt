@@ -1,0 +1,30 @@
+%META:TOPICPARENT{name="Plugins"}%
+---+ !SidebarPlugin
+
+%SHORTDESCRIPTION%
+
+%TOC%
+
+---++ Introduction
+
+%JQREQUIRE{"chili"}%
+This plugin provides a API to display any kind of content within a sidebar.
+
+---++ Installation
+%$INSTALL_INSTRUCTIONS%
+
+---++ API Usage
+!ToDo
+
+---++ Examples
+!ToDo
+
+---++ Plugin Info
+
+| Author: | Foswiki:Main.SvenMeyer |
+| Copyright: | &copy; 2017, Modell Aachen GmbH |
+| License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
+| Release: | %$RELEASE% |
+| Version: | %$VERSION% |
+| Home: | http://www.modell-aachen.de |
+| Support: | http://www.modell-aachen.de |
