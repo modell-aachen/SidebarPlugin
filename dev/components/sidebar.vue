@@ -17,9 +17,7 @@
   </div>
 
   <transition name="fade">
-    <sidebar-toast v-if="toast"
-      :config="toast" />
-    </sidebar-toast>
+    <sidebar-toast v-if="toast" :config="toast" />
   </transition>
 
   <transition name="fade">
