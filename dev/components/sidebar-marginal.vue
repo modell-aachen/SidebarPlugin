@@ -10,8 +10,11 @@
         :icon="item.icon"
         :text="item.text"
         @click="item.callback" />
-        <sidebar-dropdown v-if="item.type == 'dropdown'"
+      <sidebar-dropdown v-if="item.type == 'dropdown'"
+        :anchor="name === 'header' ? 'bottom' : 'top'"
         :color="item.color"
+        direction="left"
+        :entries="item.entries"
         :text="item.text"
         @click="item.callback" />
     </template>
@@ -27,7 +30,10 @@
         :text="item.text"
         @click="item.callback" />
       <sidebar-dropdown v-if="item.type == 'dropdown'"
+        :anchor="name === 'header' ? 'bottom' : 'top'"
         :color="item.color"
+        direction="right"
+        :entries="item.entries"
         :text="item.text"
         @click="item.callback" />
     </template>

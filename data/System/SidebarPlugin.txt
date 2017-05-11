@@ -54,15 +54,40 @@ In this section those component definitions are explained.
 </verbatim>
 
 ---++++ *Dropdowns*
-!ToDo
+*Please note*: Component =dropdown= currently only works when placed inside a
+sidebar's header. It will fail to render its contents when placed inside the
+footer area.
+
+| *Property* | *Description* |
+| callback | Function; called when the button gets clicked |
+| color | Class name analogous to Foundation Sites; one of =primary=, =secondary=, =success=, =warning=, =alert= |
+| text | The text of the button |
+| tooltip | A tooltip message |
+| entries | Array of objects. See below |
+
+A dropdown's entries are defined by property =entries= which basically is an
+array containing one or more objects defined by a =text= and a =callback=
+attribute.
+| *Property* | *Description* |
+| callback | Function; called when the entry gets clicked |
+| text | The text of the entry |
 
 <verbatim class="js">
 {
   type: 'dropdown',
   color: 'success',
-  icon: 'fa-check',
-  text: 'Click',
-  tooltip: 'Shown when hovered'
+  text: 'more',
+  tooltip: 'Shown when hovered',
+  entries: [
+    {
+      text: 'Entry 1',
+      callback: () => console.log('Clicked entry 1')
+    },
+    {
+      text: 'Entry 2',
+      callback: () => console.log('Clicked entry 2')
+    }
+  ]
 }
 </verbatim>
 
@@ -315,8 +340,8 @@ sidebar.makeToast(options);
 !ToDo
 
 ---++ Examples
----+++ Showing the sidebar
-Showing content without initialization: %BUTTON{"Run example" id="btn-ex-1"}%
+---+++ Showing the sidebar without initialization
+Showing content: %BUTTON{"Run example" id="btn-ex-1"}%
 %BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
 <div id="div-ex-1">
@@ -340,7 +365,12 @@ var o = {
       {
         type: 'dropdown',
         color: 'primary',
-        text: 'more'
+        text: 'more',
+        entries: [
+          {text: 'Entry 1', callback: function() {alert('clicked entry 1');}},
+          {text: 'Entry 2', callback: function() {alert('clicked entry 2');}},
+          {text: 'Entry 3', callback: function() {alert('clicked entry 3');}}
+        ]
       }
     ],
   },
@@ -361,11 +391,81 @@ sidebar.showContent(o);
 </div>
 %ENDTWISTY%
 
----+++ Toast notifications
-Toast at top position: %BUTTON{"Run example" id="btn-ex-2"}%
+---+++ Showing the sidebar with initialization
+Showing content: %BUTTON{"Run example" id="btn-ex-2"}%
 %BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
 <div id="div-ex-2">
+<verbatim class="js">
+sidebar.initialize({
+  footer: {
+    left: [{
+        type: 'button',
+        color: 'secondary',
+        icon: 'fa-chevron-left',
+        callback: function() {alert('previous');}
+      }, {
+        type: 'button',
+        color: 'secondary',
+        icon: 'fa-chevron-right',
+        callback: function() {alert('next');}
+      }],
+    right: [
+      {
+        type: 'button',
+        color: 'alert',
+        text: 'Close sidebar',
+        callback: sidebar.hide
+      }
+    ]
+  },
+  header: {
+    left: [{
+        type: 'label',
+        color: 'success',
+        text: 'approved'
+      }],
+    right: [
+      {
+        type: 'dropdown',
+        color: 'primary',
+        text: 'more',
+        entries: [
+          {text: 'Entry 1', callback: function() {alert('Clicked entry 1');}},
+          {text: 'Entry 2', callback: function() {alert('Clicked entry 2');}}
+        ]
+      }
+    ]
+  },
+  tabs: [
+    {
+      icon: 'fa-info-circle',
+      tooltip: 'circle',
+      callback: function() { sidebar.show({content: 'Clicked info icon'}); }
+    },
+    {
+      icon: 'fa-paperclip',
+      tooltip: 'paperclip',
+      callback: function() { sidebar.show({content: 'Clicked paperclip icon'});} },
+    {
+      icon: 'fa-clock-o',
+      tooltip: 'clock',
+      callback: function() { sidebar.show({content: 'Clicked clock icon'});} }
+  ]
+});
+
+var content = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.';
+
+sidebar.show({highlight: true, content: content});
+</verbatim>
+</div>
+%ENDTWISTY%
+
+---+++ Toast notifications
+Toast at top position: %BUTTON{"Run example" id="btn-ex-3"}%
+%BR%
+%TWISTY{showlink="Show source" hidelink="Hide source"}%
+<div id="div-ex-3">
 <verbatim class="js">
 var o = {
   content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
@@ -477,10 +577,10 @@ setTimeout(function() {
 %ENDTWISTY%
 
 ---+++ Modals
-Showing a spinner: %BUTTON{"Run example" id="btn-ex-3"}%
+Showing a spinner: %BUTTON{"Run example" id="btn-ex-5"}%
 %BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
-<div id="div-ex-3">
+<div id="div-ex-5">
 <verbatim class="js">
 var o = {
   content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
@@ -583,10 +683,10 @@ setTimeout(function() {
 </div>
 %ENDTWISTY%
 
-Showing a dialog: %BUTTON{"Run example" id="btn-ex-5"}%
+Showing a dialog: %BUTTON{"Run example" id="btn-ex-7"}%
 %BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
-<div id="div-ex-5">
+<div id="div-ex-7">
 <verbatim class="js">
 var o = {
   content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic, qui, iure. Ipsum minima quo provident sed aut, vitae corporis quam! Accusamus tempore eum, praesentium, tenetur iure distinctio rem blanditiis quasi vel ad odit provident architecto dolore, culpa accusantium excepturi debitis magnam nobis eius reiciendis quisquam at voluptate? Error iusto quam, iste deleniti veritatis odio atque molestias. Praesentium odit totam laboriosam qui fugit, ullam, dolor adipisci, laudantium ex dolorem officiis nam perspiciatis nulla accusamus, nostrum ad inventore. Facere vero eos libero non, culpa ipsum! Obcaecati dolorum cupiditate fugit a ut, ad soluta ea laudantium vero delectus harum, iste temporibus cumque consectetur.',
