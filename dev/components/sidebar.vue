@@ -12,7 +12,8 @@
 
   <div class="tab-contents">
     <sidebar-marginal name="header" :data="header" v-if="header" />
-    <div class="content" v-html="content"></div>
+    <div class="content" v-if="contentComponent"><component v-bind:is="contentComponent.name" :propsData="contentComponent.propsData"></component></div>
+    <div class="content" v-else v-html="content"></div>
     <sidebar-marginal name="footer" :data="footer" v-if="footer" />
   </div>
 
@@ -54,7 +55,7 @@ var initialize = function(config) {
 
 var hideSidebar = function() {
   this.isActive = this.isHighlighted = false;
-  this.content = this.toast = undefined;
+  this.content = this.contentComponent = this.toast = undefined;
 
   // reset 'this.header' and 'this.footer' if they were set by 'showContent'
   if (!this.isInitalized) {
@@ -91,6 +92,7 @@ var showSidebar = function(config) {
 
   this.isHighlighted = !!config.highlight;
   this.content = content;
+  this.contentComponent = config.contentComponent;
 
   this.isActive = true;
   resetActiveTab.call(this);
@@ -98,8 +100,12 @@ var showSidebar = function(config) {
 
 var showContent = function(config) {
   var o = Object.assign({}, config);
-  if (!o.content) {
+  if (!o.content && !o.contentComponent) {
     throw 'Missing content attribute!';
+  }
+
+  if(!o.content){
+    o.content = "";
   }
 
   var content = extractContent.call(this, o);
@@ -109,6 +115,7 @@ var showContent = function(config) {
 
   initializeMarginals.call(this, o);
   this.content = content;
+  this.contentComponent = config.contentComponent;
   this.isHighlighted = !!o.highlight;
 
   this.isActive = true;
@@ -232,6 +239,7 @@ export default {
       isInitalized: false,
       tabs: [],
       content: undefined,
+      contentComponent: undefined,
       modal: undefined,
       toast: undefined,
       header: undefined,

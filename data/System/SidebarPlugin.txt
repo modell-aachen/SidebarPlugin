@@ -117,6 +117,7 @@ window.sidebar.showContent(options);
 Where =options= is a object with the following parameters:%BR%
 | *Property* | *Description* |
 | content | Plain text, HTML string, HTMLElement, jQuery selection or a function returning a HTML string |
+| contentComponent | Provides content as a vue component . This has to be an object with two properties: The =name= property is the name of the component to instantiate (The component needs to be globally available). The =propsData= property can be an arbitrary object. It will be made available to the vue component as a prop named propsData.|
 | highlight | Boolean, optional. Indicating whether the sidebar shall highlight its outer left border |
 | header | Object, optional. See below. |
 | footer | Object, optional. See below. |
