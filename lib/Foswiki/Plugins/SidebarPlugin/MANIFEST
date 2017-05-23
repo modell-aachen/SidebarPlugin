@@ -1,7 +1,6 @@
 !noci
 data/System/SidebarPlugin.txt 0664
 lib/Foswiki/Plugins/SidebarPlugin.pm 0444
-pub/System/SidebarPlugin/examples.js 0444
 pub/System/SidebarPlugin/sidebar.js 0444
 pub/System/SidebarPlugin/sidebar.js.gz 0444
 pub/System/SidebarPlugin/sidebar.js.map 0444
