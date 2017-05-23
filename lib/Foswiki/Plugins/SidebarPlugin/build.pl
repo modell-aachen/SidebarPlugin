@@ -11,12 +11,26 @@ sub new {
   return bless($class->SUPER::new( "SidebarPlugin" ), $class);
 }
 
-sub target_build {
-  my $this = shift;
-  $this->_installDeps();
-}
+sub target_release {
+    my $this = shift;
 
-sub target_compress {}
+    print <<GUNK;
+
+Building release $this->{RELEASE} of $this->{project}, from version $this->{VERSION}
+GUNK
+    if ( $this->{-v} ) {
+        print 'Package name will be ', $this->{project}, "\n";
+        print 'Topic name will be ', $this->getTopicName(), "\n";
+    }
+
+    $this->_installDeps();
+
+    $this->build('compress');
+    $this->build('build');
+    $this->build('installer');
+    $this->build('stage');
+    $this->build('archive');
+}
 
 sub _installDeps {
   my $this = shift;
