@@ -144,9 +144,7 @@ export default {
       white-space: -pre-wrap;
       white-space: -o-pre-wrap;
       white-space: pre-wrap;
-      word-wrap: break-word;
       white-space: -webkit-pre-wrap;
-      word-break: break-all;
       white-space: normal;
     }
   }
