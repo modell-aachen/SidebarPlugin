@@ -335,6 +335,11 @@ export default {
       color: $primary-color;
       font-size: 1.25rem;
 
+      .sub {
+        color: $black;
+        font-size: .75rem;
+      }
+
       &:first-child {
         margin-top: 0;
       }
