@@ -325,6 +325,20 @@ export default {
     white-space: pre-wrap;
     white-space: -webkit-pre-wrap;
     white-space: normal;
+
+    .section-title {
+      display: block;
+      margin: $sidebar-content-padding-horizontal #{-$sidebar-content-padding-horizontal} $sidebar-content-padding-vertical;
+      padding: 0 $sidebar-content-padding-horizontal;
+      border-bottom: 2px solid $light-gray;
+
+      color: $primary-color;
+      font-size: 1.25rem;
+
+      &:first-child {
+        margin-top: 0;
+      }
+    }
   }
 }
 </style>

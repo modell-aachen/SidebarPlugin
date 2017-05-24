@@ -93,4 +93,13 @@ export default {
     }
   }
 }
+
+.button + .sidebar-dropdown {
+  margin-left: 1px !important;
+
+  > .button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
 </style>

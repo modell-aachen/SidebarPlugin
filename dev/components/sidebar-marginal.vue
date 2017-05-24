@@ -93,8 +93,8 @@ export default {
 
     > * {
       margin-bottom: 0;
-      &:not(:last-child) {
-        margin-right: 4px;
+      &:not(:first-child) {
+        margin-left: 4px;
       }
     }
   }
