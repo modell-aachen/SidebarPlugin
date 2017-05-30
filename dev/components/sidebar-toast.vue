@@ -65,7 +65,7 @@ export default {
   left: calc(#{$sidebar-width} - #{$sidebar-content-width});
   right: 0;
   height: calc(#{$sidebar-header-height} - 2px);
-  z-index: 1 + $sidebar-z-index;
+  z-index: 4 + $sidebar-z-index;
 
   p {
     color: $white;
