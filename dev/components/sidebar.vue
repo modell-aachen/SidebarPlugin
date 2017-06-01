@@ -1,32 +1,34 @@
 <template>
-<div class="flatskin-wrapped sidebar-container" :class="{active: isActive}">
+<div v-show="isActive" class="overlay" @click="hide">
+    <div class="flatskin-wrapped sidebar-container" :class="{active: isActive}">
 
-  <div class="tab-controls" :class="{highlight: isHighlighted}">
-    <sidebar-tab-button icon="fa-times" type="close" @click="hide" />
-    <div class="controls">
-      <template v-for="tab in tabs">
-        <sidebar-tab-button ref="sidebar-tab-buttons" :icon="tab.icon" :title="tab.tooltip" @click="tab.callback" />
-      </template>
+      <div class="tab-controls" :class="{highlight: isHighlighted}">
+        <sidebar-tab-button icon="fa-times" type="close" @click="hide" />
+        <div class="controls">
+          <template v-for="tab in tabs">
+            <sidebar-tab-button ref="sidebar-tab-buttons" :icon="tab.icon" :title="tab.tooltip" @click="tab.callback" />
+          </template>
+        </div>
+      </div>
+
+      <div class="tab-contents">
+        <sidebar-marginal name="header" :data="header" v-if="header" />
+        <div class="content" v-if="contentComponent"><component v-bind:is="contentComponent.name" :propsData="contentComponent.propsData"></component></div>
+        <div class="content" v-else v-html="content"></div>
+        <sidebar-marginal name="footer" :data="footer" v-if="footer" />
+      </div>
+
+      <transition name="fade">
+        <sidebar-toast v-if="toast" :config="toast" />
+      </transition>
+
+      <transition name="fade">
+        <sidebar-modal v-if="modal"
+          :config="modal"
+          @modal-canceled="hideModal"
+          @modal-confirmed="hideModal" />
+      </transition>
     </div>
-  </div>
-
-  <div class="tab-contents">
-    <sidebar-marginal name="header" :data="header" v-if="header" />
-    <div class="content" v-if="contentComponent"><component v-bind:is="contentComponent.name" :propsData="contentComponent.propsData"></component></div>
-    <div class="content" v-else v-html="content"></div>
-    <sidebar-marginal name="footer" :data="footer" v-if="footer" />
-  </div>
-
-  <transition name="fade">
-    <sidebar-toast v-if="toast" :config="toast" />
-  </transition>
-
-  <transition name="fade">
-    <sidebar-modal v-if="modal"
-      :config="modal"
-      @modal-canceled="hideModal"
-      @modal-confirmed="hideModal" />
-  </transition>
 </div>
 </template>
 
@@ -273,7 +275,14 @@ export default {
 .fade-leave-to {
   opacity: 0
 }
-
+.overlay {
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+}
 .sidebar-container {
   position: fixed;
   top: 0;
@@ -319,6 +328,8 @@ export default {
 
   > .content {
     padding: $sidebar-content-padding;
+    height: calc(100% - 60px);
+    overflow-y: auto;
     white-space: -moz-pre-wrap !important;
     white-space: -pre-wrap;
     white-space: -o-pre-wrap;
