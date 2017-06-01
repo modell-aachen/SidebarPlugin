@@ -1,6 +1,6 @@
 <template>
 <div v-show="isActive" class="overlay" @click="hide">
-    <div class="flatskin-wrapped sidebar-container" :class="{active: isActive}">
+    <div class="flatskin-wrapped sidebar-container" :class="{active: isActive}" v-on:click.stop>
 
       <div class="tab-controls" :class="{highlight: isHighlighted}">
         <sidebar-tab-button icon="fa-times" type="close" @click="hide" />
