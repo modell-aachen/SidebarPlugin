@@ -1,35 +1,36 @@
 <template>
-<div v-show="isActive" class="overlay" @click="hide">
-    <div class="flatskin-wrapped sidebar-container" :class="{active: isActive}" v-on:click.stop>
+    <div>
+        <div v-show="isActive" class="overlay" @click="hide" />
+        <div class="flatskin-wrapped sidebar-container" :class="{active: isActive}" v-on:click.stop>
 
-      <div class="tab-controls" :class="{highlight: isHighlighted}">
-        <sidebar-tab-button icon="fa-times" type="close" @click="hide" />
-        <div class="controls">
-          <template v-for="tab in tabs">
-            <sidebar-tab-button ref="sidebar-tab-buttons" :icon="tab.icon" :title="tab.tooltip" @click="tab.callback" />
-          </template>
+            <div class="tab-controls" :class="{highlight: isHighlighted}">
+                <sidebar-tab-button icon="fa-times" type="close" @click="hide" />
+                    <div class="controls">
+                        <template v-for="tab in tabs">
+                            <sidebar-tab-button ref="sidebar-tab-buttons" :icon="tab.icon" :title="tab.tooltip" @click="tab.callback" />
+                        </template>
+                    </div>
+            </div>
+
+            <div class="tab-contents">
+                <sidebar-marginal name="header" :data="header" v-if="header" />
+                    <div class="content" v-if="contentComponent"><component v-bind:is="contentComponent.name" :propsData="contentComponent.propsData"></component></div>
+                    <div class="content" v-else v-html="content"></div>
+                    <sidebar-marginal name="footer" :data="footer" v-if="footer" />
+            </div>
+
+            <transition name="fade">
+            <sidebar-toast v-if="toast" :config="toast" />
+            </transition>
+
+            <transition name="fade">
+            <sidebar-modal v-if="modal"
+                           :config="modal"
+                           @modal-canceled="hideModal"
+                           @modal-confirmed="hideModal" />
+            </transition>
         </div>
-      </div>
-
-      <div class="tab-contents">
-        <sidebar-marginal name="header" :data="header" v-if="header" />
-        <div class="content" v-if="contentComponent"><component v-bind:is="contentComponent.name" :propsData="contentComponent.propsData"></component></div>
-        <div class="content" v-else v-html="content"></div>
-        <sidebar-marginal name="footer" :data="footer" v-if="footer" />
-      </div>
-
-      <transition name="fade">
-        <sidebar-toast v-if="toast" :config="toast" />
-      </transition>
-
-      <transition name="fade">
-        <sidebar-modal v-if="modal"
-          :config="modal"
-          @modal-canceled="hideModal"
-          @modal-confirmed="hideModal" />
-      </transition>
     </div>
-</div>
 </template>
 
 <script>
@@ -282,6 +283,7 @@ export default {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
+    z-index: 5;
 }
 .sidebar-container {
   position: fixed;
