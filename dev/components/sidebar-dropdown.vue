@@ -45,7 +45,14 @@ export default {
     return {id: id};
   },
   mounted: function() {
-    $(this.$el).foundation();
+    var $el = $(this.$el);
+    $el.foundation();
+
+    var $p = $el.prev();
+    if ($p.is('.button')) {
+      $p.css('border-top-right-radius', 0);
+      $p.css('border-bottom-right-radius', 0);
+    }
   },
   methods: {
     click: function() {
