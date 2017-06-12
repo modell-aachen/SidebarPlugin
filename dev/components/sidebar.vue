@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-show="isActive" class="overlay" @click="hide" />
+        <div v-show="isActive" class="sidebar_overlay" @click="hide" />
         <div class="flatskin-wrapped sidebar-container" :class="{active: isActive}" v-on:click.stop>
 
             <div class="tab-controls" :class="{highlight: isHighlighted}">
@@ -276,14 +276,14 @@ export default {
 .fade-leave-to {
   opacity: 0
 }
-.overlay {
+.sidebar_overlay {
     top: 0px;
     left: 0px;
     height: 100%;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
-    z-index: 5;
+    z-index: 99;
 }
 .sidebar-container {
   position: fixed;
