@@ -30,6 +30,8 @@ sub initPlugin {
 }
 
 sub _addToZone {
+  Foswiki::Func::addToZone( 'script', 'FOUNDATION',
+    "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/FlatSkin/js/foundation.min.js'></script>");
   my $script = <<SCRIPT;
 <script type="text/javascript" src="%PUBURLPATH%/%SYSTEMWEB%/SidebarPlugin/sidebar.js"></script>
 SCRIPT
@@ -37,9 +39,8 @@ SCRIPT
     'script',
     'SIDEBARPLUGIN::SCRIPTS',
     $script,
-    'JQUERYPLUGIN::FOSWIKI::PREFERENCES,VUEJSPLUGIN'
+    'JQUERYPLUGIN::FOSWIKI::PREFERENCES,VUEJSPLUGIN,FOUNDATION'
   );
-
   my $fa = <<FONT;
 <link rel="stylesheet" type="text/css" media="all" href="%PUBURLPATH%/%SYSTEMWEB%/FontAwesomeContrib/css/font-awesome.min.css" />
 FONT

@@ -15,12 +15,6 @@
 </template>
 
 <script>
-require('../../node_modules/foundation-sites/dist/js/plugins/foundation.core.min.js');
-require('../../node_modules/foundation-sites/dist/js/plugins/foundation.util.mediaQuery.min.js');
-require('../../node_modules/foundation-sites/dist/js/plugins/foundation.util.keyboard.min.js');
-require('../../node_modules/foundation-sites/dist/js/plugins/foundation.util.box.min.js');
-require('../../node_modules/foundation-sites/dist/js/plugins/foundation.util.triggers.min.js');
-require('../../node_modules/foundation-sites/dist/js/plugins/foundation.dropdown.min.js');
 
 var makeGUID = function() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
