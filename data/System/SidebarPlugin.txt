@@ -341,9 +341,10 @@ sidebar.makeToast(options);
 !ToDo
 
 ---++ Examples
+
+Copy any of the code snippets into your browsers console.
+
 ---+++ Showing the sidebar without initialization
-Showing content: %BUTTON{"Run example" id="btn-ex-1"}%
-%BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
 <div id="div-ex-1">
 <verbatim class="js">
@@ -393,8 +394,6 @@ sidebar.showContent(o);
 %ENDTWISTY%
 
 ---+++ Showing the sidebar with initialization
-Showing content: %BUTTON{"Run example" id="btn-ex-2"}%
-%BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
 <div id="div-ex-2">
 <verbatim class="js">
@@ -463,7 +462,7 @@ sidebar.show({highlight: true, content: content});
 %ENDTWISTY%
 
 ---+++ Toast notifications
-Toast at top position: %BUTTON{"Run example" id="btn-ex-3"}%
+Toast at top position:
 %BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
 <div id="div-ex-3">
@@ -516,7 +515,7 @@ setTimeout(function() {
 </div>
 %ENDTWISTY%
 
-Toast with other dimensions: %BUTTON{"Run example" id="btn-ex-4"}%
+Toast with other dimensions:
 %BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
 <div id="div-ex-4">
@@ -578,7 +577,7 @@ setTimeout(function() {
 %ENDTWISTY%
 
 ---+++ Modals
-Showing a spinner: %BUTTON{"Run example" id="btn-ex-5"}%
+Showing a spinner:
 %BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
 <div id="div-ex-5">
@@ -630,7 +629,7 @@ setTimeout(function() {
 </div>
 %ENDTWISTY%
 
-Showing a message (of type success): %BUTTON{"Run example" id="btn-ex-6"}%
+Showing a message (of type success):
 %BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
 <div id="div-ex-6">
@@ -684,7 +683,7 @@ setTimeout(function() {
 </div>
 %ENDTWISTY%
 
-Showing a dialog: %BUTTON{"Run example" id="btn-ex-7"}%
+Showing a dialog:
 %BR%
 %TWISTY{showlink="Show source" hidelink="Hide source"}%
 <div id="div-ex-7">

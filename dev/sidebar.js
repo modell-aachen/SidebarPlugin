@@ -19,7 +19,7 @@ import sidebar_toast from './components/sidebar-toast.vue';
     Vue.component(sidebar_toast.name, sidebar_toast);
 
     var sb = document.createElement(sidebar.name);
-    document.body.append(sb);
+    document.body.appendChild(sb);
     new Vue({el: sb});
   });
 }(jQuery, document, window, undefined));
